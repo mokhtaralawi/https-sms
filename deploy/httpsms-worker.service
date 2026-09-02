@@ -1,0 +1,17 @@
+[Unit]
+Description=HttpSMS - Celery worker (message dispatch, webhooks, usage)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=httpsms
+Group=httpsms
+WorkingDirectory=/srv/http_sms
+EnvironmentFile=/srv/http_sms/.env
+ExecStart=/srv/http_sms/venv/bin/celery -A httpsms worker -l info --concurrency=2
+Restart=always
+RestartSec=3
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Database / data (contains real credentials - never commit)
+*.sqlite3
+*.db
+
+# Logs
+logs/
+*.log
+
+# Static / media
+staticfiles/
+/media/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
