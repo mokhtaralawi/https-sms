@@ -80,6 +80,16 @@ class DevicePairsView(APIView):
             auth_token=token,
             status=Device.Status.OFFLINE,
         )
+        phone_number = (serializer.validated_data.get("phone_number") or "").strip()
+        if phone_number:
+            SimCard.objects.update_or_create(
+                device=device,
+                slot=0,
+                defaults={
+                    "phone_number": phone_number,
+                    "status": SimCard.Status.ACTIVE,
+                },
+            )
         AuditLog.objects.create(action="device.register",
                                 user=None if isinstance(request.user, APIKeyPrincipal) else request.user,
                                 customer=customer, resource_type="device", resource_id=str(device.id))

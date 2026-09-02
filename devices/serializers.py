@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from devices.models import Device, SimCard
 
@@ -35,3 +36,12 @@ class DeviceRegisterSerializer(serializers.Serializer):
     model = serializers.CharField(required=False, allow_blank=True, max_length=255)
     manufacturer = serializers.CharField(required=False, allow_blank=True, max_length=255)
     android_version = serializers.CharField(required=False, allow_blank=True, max_length=64)
+    phone_number = serializers.CharField(required=False, allow_blank=True, max_length=20)
+
+    def validate_phone_number(self, value):
+        if not value:
+            return value
+        digits = "".join(ch for ch in value if ch.isdigit() or ch == "+")
+        if not any(ch.isdigit() for ch in digits):
+            raise ValidationError("phone_number must contain digits")
+        return digits[:20]
