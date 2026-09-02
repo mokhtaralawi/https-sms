@@ -1,0 +1,39 @@
+{% extends "webapp/base.html" %}
+{% block title %}إنشاء حساب جديد{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="card">
+    <h1>إنشاء حساب جديد</h1>
+    <p class="sub">سجّل ببريد Gmail الخاص بك، وسنرسل رمز تحقق OTP إلى بريدك.</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <label>الاسم الكامل</label>
+      <input type="text" name="full_name" placeholder="الاسم كما يظهر في الحساب" value="{{ request.POST.full_name }}">
+
+      <label>البريد الإلكتروني (Gmail)</label>
+      <input type="email" name="email" placeholder="example@gmail.com" value="{{ request.POST.email }}" required>
+
+      <label>كلمة المرور</label>
+      <input type="password" name="password" placeholder="8 أحرف على الأقل" required>
+
+      <label>تأكيد كلمة المرور</label>
+      <input type="password" name="password_confirm" placeholder="أعد كلمة المرور" required>
+
+      <label>اسم الشركة (اختياري)</label>
+      <input type="text" name="company_name" placeholder="شركتك / نشاطك" value="{{ request.POST.company_name }}">
+
+      <button type="submit" class="btn">إنشاء الحساب وإرسال رمز التحقق</button>
+    </form>
+
+    <div class="oauth-divider">أو</div>
+    <a class="btn google" href="{% url 'webapp:google_login' %}">
+      <span class="google-icon">G</span> المتابعة عبر Google
+    </a>
+
+    <p class="sub" style="margin-top:18px">لديك حساب بالفعل؟
+      <a href="{% url 'webapp:login' %}">سجّل الدخول</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

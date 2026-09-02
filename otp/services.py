@@ -52,6 +52,61 @@ class OTPService:
         return {"otp_id": str(otp.id), "message_id": otp.message_id}
 
     @classmethod
+    def send_email(cls, recipient_email: str, purpose: str = "registration") -> dict:
+        """Generate an OTP for an email address and deliver it via SMTP.
+
+        Unlike ``send`` (which is bound to an existing customer and delivered
+        over SMS), this supports email delivery and does not require a
+        customer instance — used by the web registration flow.
+        """
+        from django.core.mail import send_mail
+
+        from otp.models import OTPRequest, generate_otp_code
+
+        recipient_email = recipient_email.strip().lower()
+        rl_key = f"otp:email:send:{recipient_email}"
+        if cache.get(rl_key):
+            raise OTPError("Please wait before requesting another code.")
+
+        code = generate_otp_code()
+        hashed = hashlib.sha256(code.encode("utf-8")).hexdigest()
+
+        otp = OTPRequest.objects.create(
+            customer=None,
+            recipient=recipient_email,
+            purpose=purpose,
+            hashed_code=hashed,
+            code_prefix=code[:2],
+            expires_at=datetime_now() + timedelta(seconds=settings.OTP_EXPIRY_SECONDS),
+        )
+        cache.set(rl_key, 1, timeout=cls.SEND_LIMIT_SECONDS)
+
+        minutes = settings.OTP_EXPIRY_SECONDS // 60
+        subject = f"Your verification code is {code}"
+        message = (
+            f"Hello,\n\n"
+            f"Your verification code is {code}.\n"
+            f"It is valid for {minutes} minute(s).\n\n"
+            f"If you did not request this code, you can ignore this email."
+        )
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [recipient_email])
+
+        return {"otp_id": str(otp.id)}
+
+    @classmethod
+    def verify_email(cls, recipient_email: str, code: str, otp_id: str = None, purpose: str = "registration") -> bool:
+        from otp.models import OTPRequest
+
+        recipient_email = recipient_email.strip().lower()
+        qs = OTPRequest.objects.filter(recipient=recipient_email, purpose=purpose)
+        if otp_id:
+            qs = qs.filter(id=otp_id)
+        otp = qs.order_by("-created_at").first()
+        if not otp:
+            raise OTPError("No pending OTP found.")
+        return otp.verify(code)
+
+    @classmethod
     def verify(cls, customer, recipient: str, code: str, otp_id: str = None, purpose: str = "authentication") -> bool:
         from otp.models import OTPRequest
 

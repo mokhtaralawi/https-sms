@@ -14,6 +14,8 @@ admin.site.index_title = "لوحة التحكم"
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
+    # Web app (DTL) — registration, OTP, login, dashboard
+    path("", include("webapp.urls")),
     # httpSMS-compatible endpoints (root-level, x-api-key auth)
     path("", include("httpsms_compat.urls")),
     # API v1

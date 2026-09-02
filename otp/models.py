@@ -15,8 +15,14 @@ class OTPRequest(UUIDModel, TimeStampedModel):
         EXPIRED = "EXPIRED", "Expired"
         USED = "USED", "Used"
 
-    customer = models.ForeignKey("customers.Customer", on_delete=models.CASCADE, related_name="otp_requests")
-    recipient = models.CharField(max_length=20, db_index=True)
+    customer = models.ForeignKey(
+        "customers.Customer",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="otp_requests",
+    )
+    recipient = models.CharField(max_length=254, db_index=True)
     purpose = models.CharField(max_length=50, default="authentication")
 
     hashed_code = models.CharField(max_length=64, editable=False)

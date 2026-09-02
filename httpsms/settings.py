@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     "dashboard",
     "otp",
     "httpsms_compat",
+    "webapp",
 ]
 
 MIDDLEWARE = [
@@ -279,6 +280,21 @@ RATE_LIMIT_DEFAULT_PER_MONTH = env("RATE_LIMIT_DEFAULT_PER_MONTH", default=20000
 OTP_CODE_LENGTH = env("OTP_CODE_LENGTH", default=6)
 OTP_EXPIRY_SECONDS = env("OTP_EXPIRY_SECONDS", default=300)
 OTP_MAX_ATTEMPTS = env("OTP_MAX_ATTEMPTS", default=5)
+
+# Email / SMTP (used for email-based OTP delivery)
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=False)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@https-sms.dev313.site")
+
+# Google OAuth (optional "Sign in with Google")
+GOOGLE_OAUTH_CLIENT_ID = env("GOOGLE_OAUTH_CLIENT_ID", default="")
+GOOGLE_OAUTH_CLIENT_SECRET = env("GOOGLE_OAUTH_CLIENT_SECRET", default="")
+GOOGLE_REDIRECT_URI = env("GOOGLE_REDIRECT_URI", default="")
 
 # Logging
 LOGS_DIR = BASE_DIR / "logs"

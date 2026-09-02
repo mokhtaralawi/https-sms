@@ -1,0 +1,30 @@
+{% extends "webapp/base.html" %}
+{% block title %}تسجيل الدخول{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="card">
+    <h1>تسجيل الدخول</h1>
+    <p class="sub">أدخل بريدك الإلكتروني وكلمة المرور.</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <label>البريد الإلكتروني</label>
+      <input type="email" name="email" placeholder="example@gmail.com" required>
+
+      <label>كلمة المرور</label>
+      <input type="password" name="password" placeholder="كلمة المرور" required>
+
+      <button type="submit" class="btn">دخول</button>
+    </form>
+
+    <div class="oauth-divider">أو</div>
+    <a class="btn google" href="{% url 'webapp:google_login' %}">
+      <span class="google-icon">G</span> تسجيل الدخول عبر Google
+    </a>
+
+    <p class="sub" style="margin-top:18px">ليس لديك حساب؟
+      <a href="{% url 'webapp:register' %}">أنشئ حساباً</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

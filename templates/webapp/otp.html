@@ -1,0 +1,20 @@
+{% extends "webapp/base.html" %}
+{% block title %}تفعيل الحساب — رمز التحقق{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="card">
+    <h1>رمز التحقق OTP</h1>
+    <p class="sub">تم إرسال رمز مكوّن من 6 أرقام إلى <strong>{{ email }}</strong>. أدخل الرمز لتفعيل حسابك.</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <label>رمز التحقق</label>
+      <input type="number" name="code" inputmode="numeric" placeholder="000000" autocomplete="one-time-code" required>
+
+      <button type="submit" class="btn">تفعيل الحساب</button>
+      <button type="submit" name="action" value="resend" class="btn secondary">إعادة إرسال الرمز</button>
+      <button type="submit" name="action" value="cancel" class="btn secondary">إلغاء</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
