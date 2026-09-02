@@ -30,6 +30,9 @@ celery==5.6.3
 # Database
 psycopg2-binary==2.9.12
 
+# Webhook delivery
+requests==2.32.5
+
 # Optional: production ASGI server on Linux
 # gunicorn==23.0.0
 # uvicorn[standard]==0.34.0
