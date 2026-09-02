@@ -14,6 +14,8 @@ admin.site.index_title = "لوحة التحكم"
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
+    # httpSMS-compatible endpoints (root-level, x-api-key auth)
+    path("", include("httpsms_compat.urls")),
     # API v1
     path("api/v1/", include("httpsms.api_urls")),
     # Dashboard (could be served by templates in future)

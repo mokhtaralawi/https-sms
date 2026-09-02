@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     "audit",
     "dashboard",
     "otp",
+    "httpsms_compat",
 ]
 
 MIDDLEWARE = [
