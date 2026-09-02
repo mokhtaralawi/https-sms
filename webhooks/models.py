@@ -49,6 +49,8 @@ class Webhook(UUIDModel, TimeStampedModel):
         indexes = [
             models.Index(fields=["customer", "status"]),
         ]
+        verbose_name = "ويب هوك"
+        verbose_name_plural = "ويب هوكس"
 
     def __str__(self):
         return f"{self.name} ({self.url})"
@@ -107,6 +109,8 @@ class WebhookDelivery(UUIDModel, TimeStampedModel):
             models.Index(fields=["status", "next_retry_at"]),
             models.Index(fields=["webhook", "status"]),
         ]
+        verbose_name = "تسليم ويب هوك"
+        verbose_name_plural = "عمليات تسليم ويب هوك"
 
     def __str__(self):
         return f"{self.event} -> {self.webhook_id} ({self.status})"

@@ -76,6 +76,8 @@ class Message(UUIDModel, TimeStampedModel):
             models.Index(fields=["idempotency_key", "customer"]),
             models.Index(fields=["device", "status"]),
         ]
+        verbose_name = "رسالة"
+        verbose_name_plural = "الرسائل"
 
     def __str__(self):
         return f"{self.public_id} -> {self.recipient} ({self.status})"
@@ -134,6 +136,8 @@ class MessageAttempt(UUIDModel, TimeStampedModel):
         indexes = [
             models.Index(fields=["message", "status"]),
         ]
+        verbose_name = "محاولة إرسال"
+        verbose_name_plural = "محاولات الإرسال"
 
     def __str__(self):
         return f"Attempt {self.attempt_number} for {self.message_id} ({self.status})"
@@ -163,6 +167,8 @@ class IncomingMessage(UUIDModel, TimeStampedModel):
             models.Index(fields=["customer", "received_at"]),
             models.Index(fields=["from_number"]),
         ]
+        verbose_name = "رسالة واردة"
+        verbose_name_plural = "الرسائل الواردة"
 
     def __str__(self):
         return f"From {self.from_number} to {self.to_number}"

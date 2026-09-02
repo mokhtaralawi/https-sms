@@ -37,6 +37,8 @@ class AuditLog(TimeStampedModel):
             models.Index(fields=["customer", "created_at"]),
             models.Index(fields=["user", "created_at"]),
         ]
+        verbose_name = "سجل تدقيق"
+        verbose_name_plural = "سجلات التدقيق"
 
     def __str__(self):
         return f"{self.action} @ {self.created_at}"

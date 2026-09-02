@@ -27,6 +27,8 @@ class Notification(UUIDModel, TimeStampedModel):
             models.Index(fields=["user", "is_read"]),
             models.Index(fields=["channel"]),
         ]
+        verbose_name = "إشعار"
+        verbose_name_plural = "الإشعارات"
 
     def __str__(self):
         return f"{self.channel} {self.title}"

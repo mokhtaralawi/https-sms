@@ -42,6 +42,8 @@ class User(UUIDModel, AbstractBaseUser, PermissionsMixin, TimeStampedModel):
         indexes = [
             models.Index(fields=["role", "is_active"]),
         ]
+        verbose_name = "مستخدم"
+        verbose_name_plural = "المستخدمون"
 
     def __str__(self):
         return self.email

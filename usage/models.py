@@ -31,6 +31,8 @@ class UsageRecord(UUIDModel, TimeStampedModel):
             models.Index(fields=["device", "occurred_at"]),
             models.Index(fields=["sim_card", "occurred_at"]),
         ]
+        verbose_name = "سجل استخدام"
+        verbose_name_plural = "سجلات الاستخدام"
 
     def __str__(self):
         return f"{self.event_type} x{self.count} for {self.customer_id}"
@@ -55,6 +57,8 @@ class UsageSummary(UUIDModel, TimeStampedModel):
     class Meta:
         unique_together = ["customer", "period", "period_start"]
         ordering = ["-period_start"]
+        verbose_name = "ملخص استخدام"
+        verbose_name_plural = "ملخصات الاستخدام"
 
     def __str__(self):
         return f"{self.customer_id} {self.period} {self.period_start}"

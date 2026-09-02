@@ -52,6 +52,8 @@ class Device(UUIDModel, TimeStampedModel):
             models.Index(fields=["customer", "status"]),
             models.Index(fields=["status", "last_seen"]),
         ]
+        verbose_name = "جهاز"
+        verbose_name_plural = "الأجهزة"
 
     def __str__(self):
         return f"{self.name or self.device_uuid} ({self.status})"
@@ -124,6 +126,8 @@ class SimCard(UUIDModel, TimeStampedModel):
             models.Index(fields=["device", "status"]),
             models.Index(fields=["phone_number"]),
         ]
+        verbose_name = "شريحة SIM"
+        verbose_name_plural = "شرائح SIM"
 
     def __str__(self):
         return f"{self.phone_number} ({self.carrier})"

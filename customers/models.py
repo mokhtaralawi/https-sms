@@ -36,7 +36,8 @@ class Customer(UUIDModel, TimeStampedModel, StatusModel):
             models.Index(fields=["status", "created_at"]),
             models.Index(fields=["email"]),
         ]
-        verbose_name_plural = "Customers"
+        verbose_name = "عميل"
+        verbose_name_plural = "العملاء"
 
     def __str__(self):
         return self.name

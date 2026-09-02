@@ -35,6 +35,8 @@ class OTPRequest(UUIDModel, TimeStampedModel):
             models.Index(fields=["customer", "recipient"]),
             models.Index(fields=["status", "expires_at"]),
         ]
+        verbose_name = "طلب رمز تحقق"
+        verbose_name_plural = "طلبات رمز التحقق"
 
     def __str__(self):
         return f"{self.recipient} {self.purpose} ({self.status})"

@@ -55,6 +55,8 @@ class APIKey(UUIDModel, TimeStampedModel):
             models.Index(fields=["customer", "status"]),
             models.Index(fields=["environment", "status"]),
         ]
+        verbose_name = "مفتاح API"
+        verbose_name_plural = "مفاتيح API"
 
     def __str__(self):
         return f"{self.key_prefix}{self.name} ({self.environment})"
