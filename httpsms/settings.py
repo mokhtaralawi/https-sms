@@ -269,6 +269,9 @@ OTP_EXPIRY_SECONDS = env("OTP_EXPIRY_SECONDS", default=300)
 OTP_MAX_ATTEMPTS = env("OTP_MAX_ATTEMPTS", default=5)
 
 # Logging
+LOGS_DIR = BASE_DIR / "logs"
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -283,7 +286,7 @@ LOGGING = {
         "console": {"class": "logging.StreamHandler", "formatter": "verbose"},
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": BASE_DIR / "logs" / "app.log",
+            "filename": LOGS_DIR / "app.log",
             "maxBytes": 10485760,
             "backupCount": 5,
             "formatter": "verbose",
