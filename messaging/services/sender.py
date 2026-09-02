@@ -24,17 +24,39 @@ class CustomerSuspended(APIException):
     default_code = "customer_suspended"
 
 
+_ARABIC_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")
+_PERSIAN_DIGITS = str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789")
+
+
+def normalize_phone_number(value: str) -> str:
+    """Normalize a loosely-entered phone number to E.164-ish form.
+
+    - Strips spaces, dashes, dots, parentheses.
+    - Converts Arabic-Indic (٠-٩) and Persian (۰-۹) digits to Latin.
+    - Converts a leading "00" to "+".
+    - Preserves an existing leading "+".
+    """
+    if not value:
+        return value
+    s = value.strip()
+    s = s.translate(_ARABIC_DIGITS).translate(_PERSIAN_DIGITS)
+    s = "".join(ch for ch in s if ch.isdigit() or ch == "+" or ch == "*")
+    if s.startswith("00"):
+        s = "+" + s[2:]
+    if s.isdigit():
+        s = "+" + s
+    return s
+
+
 def validate_recipient(recipient: str) -> str:
-    """Basic E.164-ish validation for a phone number."""
-    recipient = recipient.strip()
-    if not recipient.startswith("+"):
-        # Accept but normalize
-        if recipient.startswith("00"):
-            recipient = "+" + recipient[2:]
+    """Basic E.164-ish validation for a phone number (tolerant normalization)."""
+    recipient = normalize_phone_number(recipient)
     if len(recipient) < 8 or len(recipient) > 16:
         raise MessageValidationError({"to": "Invalid recipient phone number."})
-    if not all(c.isdigit() or c == "+" for c in recipient):
+    if not all(c.isdigit() or c in ("+", "*") for c in recipient):
         raise MessageValidationError({"to": "Recipient may only contain digits and a leading +."})
+    if recipient.count("+") > 1 or (recipient.startswith("+") and len(recipient) < 8):
+        raise MessageValidationError({"to": "Invalid recipient phone number."})
     return recipient
 
 

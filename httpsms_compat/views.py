@@ -91,7 +91,7 @@ class CompatSendMessageView(APIView):
         # selection to the default policy (least used).
         sim_id = None
         if from_number:
-            sim = (
+            sims = (
                 SimCard.objects.filter(
                     device__customer=customer,
                     status=SimCard.Status.ACTIVE,
@@ -101,11 +101,32 @@ class CompatSendMessageView(APIView):
                 .order_by("messages_sent")
             )
             matching = next(
-                (s for s in sim if _matches_phone(from_number, s.phone_number)),
+                (s for s in sims if _matches_phone(from_number, s.phone_number)),
                 None,
             )
-            if matching:
-                sim_id = str(matching.id)
+            if matching is None:
+                return Response(
+                    {
+                        "errors": [
+                            "Sender phone not found. Make sure the httpSMS app has this SIM phone number registered "
+                            "and is online."
+                        ]
+                    },
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            if not (
+                matching.device.status == matching.device.Status.ONLINE
+                and matching.device.connection_status == matching.device.ConnectionStatus.CONNECTED
+            ):
+                return Response(
+                    {
+                        "errors": [
+                            "Gateway phone is offline. Make sure the httpSMS app is running and connected."
+                        ]
+                    },
+                    status=status.HTTP_409_CONFLICT,
+                )
+            sim_id = str(matching.id)
 
         try:
             from messaging.models import Message
