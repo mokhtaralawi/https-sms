@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from audit.models import AuditLog
 
-
 @admin.register(AuditLog)
 class AuditLogAdmin(admin.ModelAdmin):
     list_display = ["action", "user", "customer", "resource_type", "created_at"]

@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from api_keys.models import APIKey
 
-
 @admin.register(APIKey)
 class APIKeyAdmin(admin.ModelAdmin):
     list_display = ["name", "customer", "key_prefix", "environment", "status", "last_used_at", "created_at"]

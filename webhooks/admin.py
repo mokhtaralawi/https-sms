@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from webhooks.models import Webhook, WebhookDelivery
 
-
 class WebhookDeliveryInline(admin.TabularInline):
     model = WebhookDelivery
     extra = 0

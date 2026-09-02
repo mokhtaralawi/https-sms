@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from usage.models import UsageRecord, UsageSummary
 
-
 @admin.register(UsageRecord)
 class UsageRecordAdmin(admin.ModelAdmin):
     list_display = ["event_type", "customer", "device", "sim_card", "occurred_at"]

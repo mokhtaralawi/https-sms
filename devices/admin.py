@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from devices.models import Device, SimCard
 
-
 class SimCardInline(admin.TabularInline):
     model = SimCard
     extra = 0

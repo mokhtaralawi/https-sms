@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from messaging.models import IncomingMessage, Message, MessageAttempt
 
-
 class MessageAttemptInline(admin.TabularInline):
     model = MessageAttempt
     extra = 0

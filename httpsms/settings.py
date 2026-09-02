@@ -42,6 +42,10 @@ if not DEBUG and SECRET_KEY.startswith("django-insecure-"):
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=["*"])
 
+# Admin URL — change this to a secret path to hide the admin panel.
+# Example: ADMIN_URL="control-room-xy9/" → path on your domain: /control-room-xy9/
+ADMIN_URL = env("ADMIN_URL", default="admin/")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -79,6 +83,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -184,10 +189,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ar"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
+
+from django.utils.translation import gettext_lazy as _
+LANGUAGES = [
+    ("ar", _("Arabic")),
+    ("en", _("English")),
+]
 
 # Static files
 STATIC_URL = "static/"
