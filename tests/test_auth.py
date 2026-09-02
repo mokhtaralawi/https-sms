@@ -15,13 +15,17 @@ class AuthenticationTests(BaseAPITestCase):
         self.assertEqual(resp.status_code, 201)
         self.assertTrue(resp.data["success"])
         self.assertEqual(resp.data["user"]["email"], "new@test.com")
+        self.assertIn("api_key", resp.data)
+        self.assertTrue(resp.data["api_key"]["key"].startswith("sk_live_"))
 
+        from api_keys.models import APIKey
         from accounts.models import User
         from customers.models import Customer
         user = User.objects.get(email="new@test.com")
         self.assertEqual(user.role, User.Role.CUSTOMER)
         self.assertIsNotNone(user.customer)
         self.assertTrue(Customer.objects.filter(name="New User").exists())
+        self.assertTrue(APIKey.objects.filter(customer=user.customer).exists())
 
     def test_login_jwt(self):
         resp = self.client.post("/api/v1/auth/login/", {

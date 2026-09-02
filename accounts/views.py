@@ -24,7 +24,24 @@ class RegisterView(generics.CreateAPIView):
         user = serializer.save()
         AuditLog.objects.create(action="register", user=user, customer=user.customer,
                                 metadata={"method": "register"})
-        return Response({"success": True, "user": UserSerializer(user).data}, status=status.HTTP_201_CREATED)
+
+        # Auto-generate an API key for the new customer so the app can pair
+        # and send messages with it directly (like httpsms.com).
+        from api_keys.models import APIKey
+        api_key, raw = APIKey.create_for_customer(
+            user.customer, name="Default API Key", environment="LIVE"
+        )
+
+        return Response({
+            "success": True,
+            "user": UserSerializer(user).data,
+            "api_key": {
+                "key": raw,
+                "name": api_key.name,
+                "environment": api_key.environment,
+            },
+            "note": "Save your API key now; it is shown once.",
+        }, status=status.HTTP_201_CREATED)
 
 
 class LoginView(TokenObtainPairView):
