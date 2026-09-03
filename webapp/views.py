@@ -18,6 +18,13 @@ def _email_for_login(email: str) -> str:
     return (email or "").strip().lower()
 
 
+def index_view(request):
+    """Landing page. Redirect to dashboard if logged in, else login page."""
+    if request.user.is_authenticated:
+        return redirect("webapp:dashboard")
+    return redirect("webapp:login")
+
+
 def _client_ip(request):
     fwd = request.META.get("HTTP_X_FORWARDED_FOR")
     if fwd:
