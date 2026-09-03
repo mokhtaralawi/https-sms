@@ -86,6 +86,9 @@ class CompatSendMessageView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        from messaging.services.sender import normalize_phone_number
+        to_number = normalize_phone_number(str(to_number))
+
         # Resolve the requested sender SIM (the "from" phone). If one of the
         # customer's SIMs matches, pin the message to that SIM. Otherwise leave
         # selection to the default policy (least used).

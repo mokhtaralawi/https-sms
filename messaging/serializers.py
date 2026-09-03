@@ -15,13 +15,10 @@ class MessageCreateSerializer(serializers.Serializer):
     sender = serializers.CharField(max_length=20, required=False, allow_blank=True)
 
     def validate_to(self, value):
-        value = value.strip()
-        if not value.startswith("+") and not value.startswith("00"):
-            value = "+" + value
+        from messaging.services.sender import normalize_phone_number
+        value = normalize_phone_number(value)
         if len(value) < 8 or len(value) > 16:
             raise serializers.ValidationError("Invalid recipient phone number.")
-        if not all(c.isdigit() or c == "+" for c in value):
-            raise serializers.ValidationError("Recipient may only contain digits and a leading +.")
         return value
 
 
@@ -37,13 +34,10 @@ class MessageBulkCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Too many recipients (max 1000).")
         cleaned = []
         for item in value:
-            item = item.strip()
-            if not item.startswith("+") and not item.startswith("00"):
-                item = "+" + item
+            from messaging.services.sender import normalize_phone_number
+            item = normalize_phone_number(item)
             if len(item) < 8 or len(item) > 16:
                 raise serializers.ValidationError("Invalid recipient phone number.")
-            if not all(c.isdigit() or c == "+" for c in item):
-                raise serializers.ValidationError("Recipient may only contain digits and a leading +.")
             cleaned.append(item)
         return cleaned
 
