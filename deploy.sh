@@ -47,11 +47,12 @@ echo "▸ Installing Python dependencies ..."
 "$PROJECT_DIR/venv/bin/pip" install -q -r requirements.txt 2>&1 | tail -1
 info "Dependencies up to date"
 
-# ── 4. Make migrations (auto-detect model changes) ───────────────────
+# ── 4. Verify migrations are committed (never auto-generate on server) ──
 echo ""
-echo "▸ Running makemigrations ..."
-$PYTHON manage.py makemigrations --no-input 2>&1
-info "Migrations checked"
+echo "▸ Checking for uncommitted model changes ..."
+$PYTHON manage.py makemigrations --check --dry-run 2>&1 \
+  || fail "Detected model changes without migrations. Commit the migrations and redeploy."
+info "Migrations up to date"
 
 # ── 5. Apply migrations ──────────────────────────────────────────────
 echo ""
